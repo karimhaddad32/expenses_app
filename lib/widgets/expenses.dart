@@ -1,6 +1,8 @@
+import 'package:expense_tracker/widgets/chart/chart.dart';
 import 'package:expense_tracker/widgets/expenses_list/expenses_list.dart';
 import 'package:expense_tracker/models/expense.dart';
 import 'package:expense_tracker/widgets/new_expense.dart';
+
 import 'package:flutter/material.dart';
 
 class Expenses extends StatefulWidget {
@@ -42,23 +44,26 @@ class _ExpensesState extends State<Expenses> {
   }
 
   void _removeExpense(Expense expense) {
-
     final int index = _registeredExpenses.indexOf(expense);
 
     setState(() {
       _registeredExpenses.remove(expense);
     });
 
-    ScaffoldMessenger.of(context).clearSnackBars(); // To make sure we canonot undo something that is far past undoing.
+    ScaffoldMessenger.of(context)
+        .clearSnackBars(); // To make sure we canonot undo something that is far past undoing.
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: const Text('Expense Deleted.'),
         duration: const Duration(seconds: 5),
-        action: SnackBarAction(label: 'Undo', onPressed: () {
-          setState(() {
-            _registeredExpenses.insert(index, expense);
-          });
-        },),
+        action: SnackBarAction(
+          label: 'Undo',
+          onPressed: () {
+            setState(() {
+              _registeredExpenses.insert(index, expense);
+            });
+          },
+        ),
       ),
     );
   }
@@ -89,7 +94,10 @@ class _ExpensesState extends State<Expenses> {
         ],
       ),
       body: Column(
-        children: [const Text("The Chart"), mainContent],
+        children: [
+          Chart(expenses: _registeredExpenses),
+          mainContent,
+        ],
       ),
     );
   }
