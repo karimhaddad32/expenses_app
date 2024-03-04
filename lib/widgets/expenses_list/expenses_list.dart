@@ -5,17 +5,27 @@ import 'package:flutter/material.dart';
 class ExpensesList extends StatelessWidget {
   const ExpensesList({
     required this.expensesList,
+    required this.onRemoveExpense,
     super.key,
   });
 
   final List<Expense> expensesList;
+  final void Function(Expense expense) onRemoveExpense;
 
   @override
   Widget build(BuildContext context) {
     // Column is not ideal for very long lists.
     return ListView.builder(
       itemCount: expensesList.length,
-      itemBuilder: (ctx, index) => ExpenseItem(expensesList[index]),
+      // Keys are to uniquely identify widgets.
+      // The key here is for the id of each item in the list view.
+      itemBuilder: (ctx, index) => Dismissible(
+        onDismissed: (direction) => onRemoveExpense(expensesList[index])        ,
+        key: ValueKey(expensesList[index]),
+        child: ExpenseItem(
+          expensesList[index],
+        ),
+      ),
     );
   }
 }
